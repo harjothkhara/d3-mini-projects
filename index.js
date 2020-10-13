@@ -26,3 +26,12 @@ svg
   .attr('y1', 20)
   .attr('y2', 120)
   .attr('stroke', 'red');
+
+// adding svg text
+svg
+  .append('text')
+  .attr('x', 20)
+  .attr('y', 200)
+  .attr('fill', 'grey')
+  .text('hello, world!')
+  .style('font-family', 'helvetica');
