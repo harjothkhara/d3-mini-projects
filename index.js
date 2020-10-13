@@ -1,9 +1,8 @@
-// selecting items from the DOM
-// const a = document.querySelectorAll('div');
-// // using d3
-// const b = d3.selectAll('div');
-
-// console.log(a, b);
-
 const canvas = d3.select('.canvas');
-console.log(canvas);
+
+const svg = canvas.append('svg');
+
+// append shapes to svg container
+svg.append('rect');
+svg.append('circle');
+svg.append('line');
