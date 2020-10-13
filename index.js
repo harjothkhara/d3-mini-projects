@@ -3,8 +3,11 @@ const canvas = d3.select('.canvas');
 // append svg container (return value) with width and height attribute
 const svg = canvas.append('svg').attr('width', 600).attr('height', 600);
 
+// creating a group (benefit - easily transform everything inside this group all at once, e.g barcharts or an axis)
+const group = svg.append('g').attr('transform', 'translate(100,200)');
+
 // method chaining to add attributes to svg container
-svg
+group
   .append('rect')
   .attr('width', 200)
   .attr('height', 100)
@@ -12,14 +15,14 @@ svg
   .attr('x', 20)
   .attr('y', 20);
 
-svg
+group
   .append('circle')
   .attr('r', 50)
   .attr('cx', 300)
   .attr('cy', 70)
   .attr('fill', 'pink');
 
-svg
+group
   .append('line')
   .attr('x1', 370)
   .attr('x2', 400)
