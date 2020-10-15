@@ -1,22 +1,29 @@
-// select svg container first
+// select the svg container first
 const svg = d3.select('svg');
 
-d3.json('planets.json').then((data) => {
-  const circs = svg.selectAll('circle').data(data);
+d3.json('menu.json').then((data) => {
+  const y = d3.scaleLinear().domain([0, 1000]).range([0, 500]);
 
-  // add attrs to circs already in DOM
-  circs
-    .attr('cy', 200)
-    .attr('cx', (d) => d.distance)
-    .attr('r', (d) => d.radius)
-    .attr('fill', (d) => d.fill);
+  // console.log(y(400));
+  // console.log(y(0));
+  // console.log(y(900));
 
-  // append the enter selection to get the virtual elements to the DOM
-  circs
+  // join the data to rects
+  const rects = svg.selectAll('rect').data(data);
+  // adding attrs to all the existing rects in the DOM
+  rects
+    .attr('width', 50)
+    .attr('height', (d) => y(d.orders))
+    .attr('fill', 'orange')
+    // for each consecutive rectangle we're moving the further from the left by 70 pixels each time.
+    .attr('x', (d, i) => i * 70);
+
+  // append the enter selection (any DOM elements that need to be added when the joined array is longer than the selection)
+  rects
     .enter()
-    .append('circle')
-    .attr('cy', 200)
-    .attr('cx', (d) => d.distance)
-    .attr('r', (d) => d.radius)
-    .attr('fill', (d) => d.fill);
+    .append('rect')
+    .attr('width', 50)
+    .attr('height', (d) => y(d.orders))
+    .attr('fill', 'orange')
+    .attr('x', (d, i) => i * 70);
 });
