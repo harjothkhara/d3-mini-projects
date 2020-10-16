@@ -2,8 +2,18 @@
 const svg = d3.select('svg');
 
 d3.json('menu.json').then((data) => {
+  // console.log(data);
   // linear scale
-  const y = d3.scaleLinear().domain([0, 1000]).range([0, 500]);
+  const y = d3
+    .scaleLinear()
+    .domain([0, d3.max(data, (d) => d.orders)])
+    .range([0, 500]);
+
+  // const min = d3.min(data, (d) => d.orders);
+  // const max = d3.max(data, (d) => d.orders);
+  // const extent = d3.extent(data, (d) => d.orders); // array with min and max
+
+  // console.log(min, max, extent);
 
   // console.log(y(400));
   // console.log(y(0));
@@ -28,7 +38,6 @@ d3.json('menu.json').then((data) => {
     .attr('width', x.bandwidth)
     .attr('height', (d) => y(d.orders))
     .attr('fill', 'orange')
-    // for each consecutive rectangle we're moving the further from the left by 70 pixels each time.
     .attr('x', (d) => x(d.name));
 
   // append the enter selection (any DOM elements that need to be added when the joined array is longer than the selection)
