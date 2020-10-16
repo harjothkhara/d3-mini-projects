@@ -20,6 +20,7 @@ const graph = svg
 const xAxisGroup = graph
   .append('g')
   .attr('transform', `translate(0,${graphHeight})`);
+
 const yAxisGroup = graph.append('g');
 
 d3.json('menu.json').then((data) => {
@@ -28,7 +29,7 @@ d3.json('menu.json').then((data) => {
   const y = d3
     .scaleLinear()
     .domain([0, d3.max(data, (d) => d.orders)])
-    .range([0, graphHeight]);
+    .range([graphHeight, 0]);
 
   // const min = d3.min(data, (d) => d.orders);
   // const max = d3.max(data, (d) => d.orders);
@@ -57,18 +58,20 @@ d3.json('menu.json').then((data) => {
   // adding attrs to all the existing rects in the DOM
   rects
     .attr('width', x.bandwidth)
-    .attr('height', (d) => y(d.orders))
+    .attr('height', (d) => graphHeight - y(d.orders))
     .attr('fill', 'orange')
-    .attr('x', (d) => x(d.name));
+    .attr('x', (d) => x(d.name))
+    .attr('y', (d) => y(d.orders));
 
   // append the enter selection (any DOM elements that need to be added when the joined array is longer than the selection)
   rects
     .enter()
     .append('rect')
     .attr('width', x.bandwidth) // scaleband gives us this
-    .attr('height', (d) => y(d.orders))
+    .attr('height', (d) => graphHeight - y(d.orders))
     .attr('fill', 'orange')
-    .attr('x', (d) => x(d.name));
+    .attr('x', (d) => x(d.name))
+    .attr('y', (d) => y(d.orders));
 
   // create and call the axes
   const xAxis = d3.axisBottom(x);
