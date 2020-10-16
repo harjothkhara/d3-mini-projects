@@ -1,5 +1,21 @@
 // select the svg container first
-const svg = d3.select('svg');
+const svg = d3
+  .select('.canvas')
+  .append('svg')
+  .attr('width', 600)
+  .attr('height', 600);
+
+// create margins and dimension
+const margin = { top: 20, right: 20, bottom: 100, left: 100 };
+const graphWidth = 600 - margin.left - margin.right;
+const graphHeight = 600 - margin.top - margin.bottom;
+
+// inside svg container
+const graph = svg
+  .append('g')
+  .attr('width', graphWidth)
+  .attr('height', graphHeight)
+  .attr('transform', `translate(${margin.left}, ${margin.top})`); // away from edge
 
 d3.json('menu.json').then((data) => {
   // console.log(data);
@@ -32,7 +48,7 @@ d3.json('menu.json').then((data) => {
   //console.log(x.bandwidth()); // returns the width of every bar
 
   // join the data to rects
-  const rects = svg.selectAll('rect').data(data);
+  const rects = graph.selectAll('rect').data(data);
   // adding attrs to all the existing rects in the DOM
   rects
     .attr('width', x.bandwidth)
