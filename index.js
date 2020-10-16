@@ -23,69 +23,76 @@ const xAxisGroup = graph
 
 const yAxisGroup = graph.append('g');
 
-d3.json('menu.json').then((data) => {
-  // console.log(data);
-  // linear scale
-  const y = d3
-    .scaleLinear()
-    .domain([0, d3.max(data, (d) => d.orders)])
-    .range([graphHeight, 0]);
+db.collection('dishes')
+  .get()
+  .then((res) => {
+    const data = [];
+    res.docs.forEach((doc) => {
+      data.push(doc.data());
+    });
+    console.log(data);
 
-  // const min = d3.min(data, (d) => d.orders);
-  // const max = d3.max(data, (d) => d.orders);
-  // const extent = d3.extent(data, (d) => d.orders); // array with min and max
+    // linear scale
+    const y = d3
+      .scaleLinear()
+      .domain([0, d3.max(data, (d) => d.orders)])
+      .range([graphHeight, 0]);
 
-  // console.log(min, max, extent);
+    // const min = d3.min(data, (d) => d.orders);
+    // const max = d3.max(data, (d) => d.orders);
+    // const extent = d3.extent(data, (d) => d.orders); // array with min and max
 
-  // console.log(y(400));
-  // console.log(y(0));
-  // console.log(y(900));
+    // console.log(min, max, extent);
 
-  // band scale
-  const x = d3
-    .scaleBand()
-    .domain(data.map((item) => item.name))
-    .range([0, 500])
-    .paddingInner(0.2)
-    .paddingOuter(0.2);
+    // console.log(y(400));
+    // console.log(y(0));
+    // console.log(y(900));
 
-  //console.log(x('veg curry'));
-  //console.log(x('veg pasta'));
-  //console.log(x.bandwidth()); // returns the width of every bar
+    // band scale
+    const x = d3
+      .scaleBand()
+      .domain(data.map((item) => item.name))
+      .range([0, 500])
+      .paddingInner(0.2)
+      .paddingOuter(0.2);
 
-  // join the data to rects
-  const rects = graph.selectAll('rect').data(data);
-  // adding attrs to all the existing rects in the DOM
-  rects
-    .attr('width', x.bandwidth)
-    .attr('height', (d) => graphHeight - y(d.orders))
-    .attr('fill', 'orange')
-    .attr('x', (d) => x(d.name))
-    .attr('y', (d) => y(d.orders));
+    //console.log(x('veg curry'));
+    //console.log(x('veg pasta'));
+    //console.log(x.bandwidth()); // returns the width of every bar
 
-  // append the enter selection (any DOM elements that need to be added when the joined array is longer than the selection)
-  rects
-    .enter()
-    .append('rect')
-    .attr('width', x.bandwidth) // scaleband gives us this
-    .attr('height', (d) => graphHeight - y(d.orders))
-    .attr('fill', 'orange')
-    .attr('x', (d) => x(d.name))
-    .attr('y', (d) => y(d.orders));
+    // join the data to rects
+    const rects = graph.selectAll('rect').data(data);
+    // adding attrs to all the existing rects in the DOM
+    rects
+      .attr('width', x.bandwidth)
+      .attr('height', (d) => graphHeight - y(d.orders))
+      .attr('fill', 'orange')
+      .attr('x', (d) => x(d.name))
+      .attr('y', (d) => y(d.orders));
 
-  // create and call the axes
-  const xAxis = d3.axisBottom(x);
-  const yAxis = d3
-    .axisLeft(y)
-    .ticks(3)
-    .tickFormat((d) => d + ' orders');
+    // append the enter selection (any DOM elements that need to be added when the joined array is longer than the selection)
+    rects
+      .enter()
+      .append('rect')
+      .attr('width', x.bandwidth) // scaleband gives us this
+      .attr('height', (d) => graphHeight - y(d.orders))
+      .attr('fill', 'orange')
+      .attr('x', (d) => x(d.name))
+      .attr('y', (d) => y(d.orders));
 
-  xAxisGroup.call(xAxis);
-  yAxisGroup.call(yAxis);
+    // create and call the axes
+    const xAxis = d3.axisBottom(x);
+    const yAxis = d3
+      .axisLeft(y)
+      .ticks(3)
+      .tickFormat((d) => d + ' orders');
 
-  xAxisGroup
-    .selectAll('text')
-    .attr('transform', 'rotate(-40)')
-    .attr('text-anchor', 'end')
-    .attr('fill', 'orange');
-});
+    xAxisGroup.call(xAxis);
+    yAxisGroup.call(yAxis);
+
+    xAxisGroup
+      .selectAll('text')
+      .attr('transform', 'rotate(-40)')
+      .attr('text-anchor', 'end')
+      .attr('fill', 'orange');
+  });
