@@ -70,7 +70,7 @@ db.collection('dishes')
       .attr('x', (d) => x(d.name))
       .attr('y', (d) => y(d.orders));
 
-    // append the enter selection (any DOM elements that need to be added when the joined array is longer than the selection)
+    // append the enter selection (any DOM elements that need to be added when the joined array is longer than the selection). allows us to get access to virtual elements inside the enter selection
     rects
       .enter()
       .append('rect')
@@ -96,3 +96,24 @@ db.collection('dishes')
       .attr('text-anchor', 'end')
       .attr('fill', 'orange');
   });
+
+// d3 updater pattern
+const update = (data) => {
+  // 1. update scales (domains) if they rely on our data
+  y.domain([0, d3.max(data, (d) => d.orders)]);
+
+  // 2. join updated data to elements
+  const rects = graph.selectAll('rect').data(data);
+
+  // 3. remove unwanted (if any) shapes using the exit selection
+  rects.exit().remove();
+
+  // 4. update the current shapes in the dom
+  rects.attr(...etc);
+
+  // 5. append the enter selection to the dom
+  rects
+    .enter()
+    .append('rect')
+    .attr(...etc);
+};
