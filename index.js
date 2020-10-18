@@ -79,19 +79,11 @@ const update = (data) => {
   yAxisGroup.call(yAxis);
 };
 
+let data = [];
 // get data from firestore
-db.collection('dishes')
-  .get()
-  .then((res) => {
-    const data = [];
-    res.docs.forEach((doc) => {
-      data.push(doc.data());
-    });
-
-    update(data);
-
-    d3.interval(() => {
-      data.pop();
-      // update(data);
-    }, 3000);
+db.collection('dishes').onSnapshot((res) => {
+  res.docChanges().forEach((change) => {
+    console.log(change.doc.data());
   });
+  //update(data);
+});
