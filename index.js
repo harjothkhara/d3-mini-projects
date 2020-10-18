@@ -54,7 +54,7 @@ const update = (data) => {
   const rects = graph.selectAll('rect').data(data);
 
   // remove exit selection
-  // rects.exit().remove();
+  rects.exit().remove();
 
   // update current shapes in dom - adding attrs to all the existing rects in the DOM
   rects
@@ -91,7 +91,7 @@ db.collection('dishes')
     update(data);
 
     d3.interval(() => {
-      data[0].orders += 50;
+      data.pop();
       // update(data);
-    }, 1000);
+    }, 3000);
   });
