@@ -107,3 +107,11 @@ db.collection('dishes').onSnapshot((res) => {
   });
   update(data);
 });
+
+// starting conditions:
+// Y = graphHeight
+// Height = 0
+
+// Ending conditions:
+// Y = y(d.orders)
+// Height = graphHeight - y(d.orders)
